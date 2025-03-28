@@ -89,6 +89,12 @@ ul {
     left: 0;
     bottom: 0;
     z-index: 900;
+    transition: all 0.3s ease;
+}
+
+/* 侧边栏收缩状态 */
+.sidebar.collapsed {
+    left: -240px;
 }
 
 .sidebar-nav {
@@ -167,8 +173,15 @@ ul {
 .content {
     flex: 1;
     padding: 20px;
+    padding-left:50px;
     overflow-y: auto;
     margin-left: 240px; /* 侧边栏宽度 */
+    transition: margin-left 0.3s ease;
+    
+}
+
+.content.expanded {
+    margin-left: 0;
 }
 
 .content-header {
@@ -292,28 +305,77 @@ table tr:hover {
 
 /* 响应式 */
 @media (max-width: 768px) {
+
+    .sidebar-header{
+        display: flex;
+        flex-direction: row;
+        padding: 0 1.25rem;
+        height: 48px;
+        border-bottom: solid 1px var(--gray-200);
+        background-color: transparent;
+        flex: 0 0 auto;
+        align-items: center;
+    }
+    .header {
+        display: none; /* 隐藏原来的顶部栏 */
+    }
+
     .container {
         flex-direction: column;
+        margin-top: 0; /* 移除顶部间距 */
     }
     
     .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e5e5e5;
-        position: static;
-        max-height: 300px;
+        width: 240px;
+        border-right: 1px solid #e5e5e5;
+        position: fixed;
+        top: 0; /* 改为从顶部开始 */
+        left: -240px;
+        bottom: 0;
+        z-index: 900;
+        transition: all 0.3s ease;
+        max-height: none;
+        background-color: #fff;
+    }
+
+    .sidebar.show {
+        left: 0;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
     }
     
     .sidebar-nav {
-        max-height: 300px;
+        height: calc(100% - 56px); /* 减去顶部高度 */
     }
     
     .nav-scrollable {
-        max-height: 240px;
+        height: calc(100% - 60px);
     }
     
     .content {
         margin-left: 0;
+        width: 100%;
+        padding-top: 20px; /* 调整内容区顶部间距 */
+    }
+    
+    /* 移动端下的伸缩按钮样式 */
+    .sidebar-toggle {
+        display: block;
+        opacity: 1 !important;
+        right: -40px;
+        background-color: #fff;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.show .sidebar-toggle {
+        right: -13px;
+    }
+
+    .sidebar-toggle .toggle-icon {
+        transform: rotate(180deg);
+    }
+
+    .sidebar.show .toggle-icon {
+        transform: rotate(0deg);
     }
 }
 
@@ -353,4 +415,96 @@ table tr:hover {
 .report-link:hover {
     color: #4c84ff;
     text-decoration: underline;
+}
+
+/* 侧边栏伸缩按钮 */
+.sidebar-toggle {
+    position: absolute;
+    top: 35px;
+    right: -13px;
+    width: 25px;
+    height: 25px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-left: none;
+    border-radius: 50%;
+    padding-bottom:3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: translateY(-50%);
+    z-index: 910;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.collapsed .sidebar-toggle{
+    opacity:1;
+    right:-40px;
+}
+
+.sidebar:hover .sidebar-toggle {
+    opacity: 1;
+}
+
+.sidebar-toggle:hover {
+    background-color: #4c84ff;
+}
+
+.sidebar-toggle:hover .toggle-icon {
+    color: #fff;
+}
+
+.toggle-icon {
+    font-size: 12px;
+    color: #666;
+    transition: color 0.2s ease;
+    margin-top:5px;
+}
+
+/* 侧边栏收缩时按钮方向改变 */
+.sidebar.collapsed .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* 侧边栏顶部 */
+.sidebar-header {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .sidebar-header {
+        display: flex;
+        flex-direction: row;
+        padding: 0 1.25rem;
+        height: 48px;
+        border-bottom: solid 1px var(--gray-200);
+        background-color: transparent;
+        flex: 0 0 auto;
+        align-items: center;
+    }
+
+    .sidebar-header .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sidebar-header .logo img {
+        height: 20px;
+        width: auto;
+    }
+
+    .sidebar-header .divider {
+        height: 16px;
+        width: 1px;
+        background-color: #e0e0e0;
+    }
+
+    .sidebar-header .header-title {
+        font-size: 14px;
+        color: #333;
+        font-weight: normal;
+    }
 } 

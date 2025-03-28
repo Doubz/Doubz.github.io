@@ -11,15 +11,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 响应式侧边栏切换
-    const toggleSidebar = document.querySelector('.toggle-sidebar');
+    // 侧边栏伸缩功能
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
     const sidebar = document.querySelector('.sidebar');
+    const content = document.querySelector('.content');
     
-    if (toggleSidebar && sidebar) {
-        toggleSidebar.addEventListener('click', function() {
-            sidebar.classList.toggle('show');
+    if (sidebarToggle && sidebar && content) {
+        sidebarToggle.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                // 移动端逻辑
+                sidebar.classList.toggle('show');
+            } else {
+                // PC端逻辑
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+            }
+            
+            // 更新按钮提示文字
+            if (sidebar.classList.contains('collapsed') || !sidebar.classList.contains('show')) {
+                sidebarToggle.setAttribute('title', '展开侧边栏');
+            } else {
+                sidebarToggle.setAttribute('title', '收起侧边栏');
+            }
         });
     }
-    
-    // 注意：移除了滚动监听代码，顶部栏现在始终固定在顶部
+
+    // 监听窗口大小变化
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('show');
+        }
+    });
 }); 
